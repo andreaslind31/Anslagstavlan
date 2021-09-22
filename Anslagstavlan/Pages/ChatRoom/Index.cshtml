@@ -1,0 +1,39 @@
+﻿@page
+@model Anslagstavlan.Pages.ChatRoom.ListRoomModel
+
+
+<h1>List of rooms!</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ChatRoomModel[0].ChatRoomOwner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChatRoomModel[0].ChatRoomName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.ChatRoomModel) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChatRoomOwner)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChatRoomName)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ChatRoomId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ChatRoomId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ChatRoomId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
