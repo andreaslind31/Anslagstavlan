@@ -1,0 +1,40 @@
+﻿@page
+@model Anslagstavlan.Pages.ChatRoom.EditRoomModel
+
+@{
+    ViewData["Title"] = "EditRoom";
+}
+
+<h1>EditRoom</h1>
+
+<h4>ChatRoomModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ChatRoomModel.ChatRoomId" />
+            <div class="form-group">
+                <label asp-for="ChatRoomModel.ChatRoomOwner" class="control-label"></label>
+                <input asp-for="ChatRoomModel.ChatRoomOwner" class="form-control" />
+                <span asp-validation-for="ChatRoomModel.ChatRoomOwner" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ChatRoomModel.ChatRoomName" class="control-label"></label>
+                <input asp-for="ChatRoomModel.ChatRoomName" class="form-control" />
+                <span asp-validation-for="ChatRoomModel.ChatRoomName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
