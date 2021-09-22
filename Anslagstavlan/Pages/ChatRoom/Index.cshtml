@@ -5,35 +5,18 @@
 <h1>List of rooms!</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="/ChatRoom/Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ChatRoomModel[0].ChatRoomOwner)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ChatRoomModel[0].ChatRoomName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.ChatRoomModel) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChatRoomOwner)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChatRoomName)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ChatRoomId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ChatRoomId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ChatRoomId">Delete</a>
-            </td>
-        </tr>
+
+@if (Model.ChatRoomModel.Any())
+{
+    @foreach (var item in Model.ChatRoomModel)
+    {
+
+        <h3>@item.ChatRoomName</h3>
+        <h4>@item.ChatRoomOwner</h4>
+        <a class="btn btn-outline-warning" asp-page="/ChatRoom/Edit" asp-route-id="@item.ChatRoomId">Edit chat room</a>
+        <a class="btn btn-outline-success" asp-page="/ChatRoom/Details" asp-route-id="@item.ChatRoomId"> Show messages </a>
+        <a class="btn btn-outline-danger" asp-page="/ChatRoom/Delete" asp-route-id="@item.ChatRoomId"> <small>Delete</small></a>
+    }
 }
-    </tbody>
-</table>

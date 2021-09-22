@@ -26,6 +26,8 @@ namespace Anslagstavlan.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ChatUserId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -44,6 +46,20 @@ namespace Anslagstavlan.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatRoomModels",
+                columns: table => new
+                {
+                    ChatRoomId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ChatRoomOwner = table.Column<int>(type: "int", nullable: false),
+                    ChatRoomName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatRoomModels", x => x.ChatRoomId);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,6 +168,35 @@ namespace Anslagstavlan.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ChatMessageModels",
+                columns: table => new
+                {
+                    ChatMessageId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChatRoomId = table.Column<int>(type: "int", nullable: false),
+                    ChatUserId = table.Column<int>(type: "int", nullable: false),
+                    ChatUserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessageModels", x => x.ChatMessageId);
+                    table.ForeignKey(
+                        name: "FK_ChatMessageModels_AspNetUsers_ChatUserId1",
+                        column: x => x.ChatUserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ChatMessageModels_ChatRoomModels_ChatRoomId",
+                        column: x => x.ChatRoomId,
+                        principalTable: "ChatRoomModels",
+                        principalColumn: "ChatRoomId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -190,6 +235,16 @@ namespace Anslagstavlan.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessageModels_ChatRoomId",
+                table: "ChatMessageModels",
+                column: "ChatRoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessageModels_ChatUserId1",
+                table: "ChatMessageModels",
+                column: "ChatUserId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -210,10 +265,16 @@ namespace Anslagstavlan.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ChatMessageModels");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "ChatRoomModels");
         }
     }
 }

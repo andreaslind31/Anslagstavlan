@@ -12,12 +12,11 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Anslagstavlan.Pages.ChatRoom
 {
-    [Authorize]
     public class EditRoomModel : PageModel
     {
-        private readonly Anslagstavlan.Domain.Database.AuthDbContext _context;
+        private readonly AuthDbContext _context;
 
-        public EditRoomModel(Anslagstavlan.Domain.Database.AuthDbContext context)
+        public EditRoomModel(AuthDbContext context)
         {
             _context = context;
         }
@@ -68,7 +67,7 @@ namespace Anslagstavlan.Pages.ChatRoom
                 }
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/ChatRoom/Index");
         }
 
         private bool ChatRoomModelExists(int id)

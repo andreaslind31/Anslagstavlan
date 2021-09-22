@@ -12,14 +12,14 @@ namespace Anslagstavlan.Pages.ChatRoom
 {
     public class ListRoomModel : PageModel
     {
-        private readonly Anslagstavlan.Domain.Database.AuthDbContext _context;
+        private readonly AuthDbContext _context;
 
-        public ListRoomModel(Anslagstavlan.Domain.Database.AuthDbContext context)
+        public IList<ChatRoomModel> ChatRoomModel { get; set; } 
+
+        public ListRoomModel(AuthDbContext context)
         {
             _context = context;
         }
-
-        public IList<ChatRoomModel> ChatRoomModel { get;set; }
 
         public async Task OnGetAsync()
         {

@@ -14,9 +14,12 @@ namespace Anslagstavlan.Pages.ChatRoom
     [Authorize]
     public class CreateRoomModel : PageModel
     {
-        private readonly Anslagstavlan.Domain.Database.AuthDbContext _context;
+        private readonly AuthDbContext _context;
 
-        public CreateRoomModel(Anslagstavlan.Domain.Database.AuthDbContext context)
+        [BindProperty]
+        public ChatRoomModel ChatRoom { get; set; }
+
+        public CreateRoomModel(AuthDbContext context)
         {
             _context = context;
         }
@@ -26,9 +29,6 @@ namespace Anslagstavlan.Pages.ChatRoom
             return Page();
         }
 
-        [BindProperty]
-        public ChatRoomModel ChatRoomModel { get; set; }
-
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
@@ -37,7 +37,7 @@ namespace Anslagstavlan.Pages.ChatRoom
                 return Page();
             }
 
-            _context.ChatRoomModels.Add(ChatRoomModel);
+            _context.ChatRoomModels.Add(ChatRoom);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

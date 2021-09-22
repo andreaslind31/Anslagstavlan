@@ -32,6 +32,9 @@ namespace Anslagstavlan.Migrations
                     b.Property<int>("ChatUserId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ChatUserId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -42,7 +45,7 @@ namespace Anslagstavlan.Migrations
 
                     b.HasIndex("ChatRoomId");
 
-                    b.HasIndex("ChatUserId");
+                    b.HasIndex("ChatUserId1");
 
                     b.ToTable("ChatMessageModels");
                 });
@@ -63,21 +66,6 @@ namespace Anslagstavlan.Migrations
                     b.HasKey("ChatRoomId");
 
                     b.ToTable("ChatRoomModels");
-                });
-
-            modelBuilder.Entity("Anslagstavlan.Domain.Models.ChatUserModel", b =>
-                {
-                    b.Property<int>("ChatUserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ChatUserId");
-
-                    b.ToTable("ChatUserModels");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -143,6 +131,10 @@ namespace Anslagstavlan.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -194,6 +186,8 @@ namespace Anslagstavlan.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -276,6 +270,18 @@ namespace Anslagstavlan.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Anslagstavlan.Domain.Models.ChatUserModel", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<int>("ChatUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasDiscriminator().HasValue("ChatUserModel");
+                });
+
             modelBuilder.Entity("Anslagstavlan.Domain.Models.ChatMessageModel", b =>
                 {
                     b.HasOne("Anslagstavlan.Domain.Models.ChatRoomModel", "ChatRoom")
@@ -286,9 +292,7 @@ namespace Anslagstavlan.Migrations
 
                     b.HasOne("Anslagstavlan.Domain.Models.ChatUserModel", "ChatUser")
                         .WithMany()
-                        .HasForeignKey("ChatUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChatUserId1");
 
                     b.Navigation("ChatRoom");
 

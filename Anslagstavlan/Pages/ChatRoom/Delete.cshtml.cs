@@ -14,15 +14,16 @@ namespace Anslagstavlan.Pages.ChatRoom
     [Authorize]
     public class DeleteRoomModel : PageModel
     {
-        private readonly Anslagstavlan.Domain.Database.AuthDbContext _context;
+        private readonly AuthDbContext _context;
 
-        public DeleteRoomModel(Anslagstavlan.Domain.Database.AuthDbContext context)
+        [BindProperty]
+        public ChatRoomModel ChatRoom { get; set; }
+
+
+        public DeleteRoomModel(AuthDbContext context)
         {
             _context = context;
         }
-
-        [BindProperty]
-        public ChatRoomModel ChatRoomModel { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -31,9 +32,9 @@ namespace Anslagstavlan.Pages.ChatRoom
                 return NotFound();
             }
 
-            ChatRoomModel = await _context.ChatRoomModels.FirstOrDefaultAsync(m => m.ChatRoomId == id);
+            ChatRoom = await _context.ChatRoomModels.FirstOrDefaultAsync(m => m.ChatRoomId == id);
 
-            if (ChatRoomModel == null)
+            if (ChatRoom == null)
             {
                 return NotFound();
             }
@@ -47,11 +48,11 @@ namespace Anslagstavlan.Pages.ChatRoom
                 return NotFound();
             }
 
-            ChatRoomModel = await _context.ChatRoomModels.FindAsync(id);
+            ChatRoom = await _context.ChatRoomModels.FindAsync(id);
 
-            if (ChatRoomModel != null)
+            if (ChatRoom != null)
             {
-                _context.ChatRoomModels.Remove(ChatRoomModel);
+                _context.ChatRoomModels.Remove(ChatRoom);
                 await _context.SaveChangesAsync();
             }
 
