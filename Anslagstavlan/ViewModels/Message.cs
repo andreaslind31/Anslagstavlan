@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Anslagstavlan.ViewModels
 {
+    // this is just here to test. havent implemented it yet
     public class Message
     {
-
-        //maybe add a viewModel class to solve problems with details razor page
-
-        [BindProperty]
         public string Text { get; set; }
 
     }

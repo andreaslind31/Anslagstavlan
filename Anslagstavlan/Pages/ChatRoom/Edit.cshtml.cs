@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Anslagstavlan.Pages.ChatRoom
 {
+    [Authorize]
     public class EditRoomModel : PageModel
     {
         private readonly AuthDbContext _context;

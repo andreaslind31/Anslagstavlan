@@ -33,7 +33,7 @@ namespace Anslagstavlan.Pages.User
                 {
                     if (returnUrl == null || returnUrl == "/")
                     {
-                        return RedirectToPage("/Index");
+                        return RedirectToPage("/ChatRoom/Index");
                     }
                     else
                     {

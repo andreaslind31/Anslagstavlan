@@ -2,10 +2,10 @@
 @model Anslagstavlan.Pages.ChatRoom.ListRoomModel
 
 
-<h1>List of rooms!</h1>
+<h1>List of chat rooms!</h1>
 
 <p>
-    <a asp-page="/ChatRoom/Create">Create New</a>
+    <a class="btn btn-primary" asp-page="/ChatRoom/Create">Create new chat room</a>
 </p>
 
 @if (Model.ChatRoomModel.Any())
@@ -15,8 +15,8 @@
 
         <h3>@item.ChatRoomName</h3>
         <h4>@item.ChatRoomOwner</h4>
-        <a class="btn btn-outline-warning" asp-page="/ChatRoom/Edit" asp-route-id="@item.ChatRoomId">Edit chat room</a>
-        <a class="btn btn-outline-success" asp-page="/ChatRoom/Details" asp-route-id="@item.ChatRoomId"> Show messages </a>
-        <a class="btn btn-outline-danger" asp-page="/ChatRoom/Delete" asp-route-id="@item.ChatRoomId"> <small>Delete</small></a>
+        <p><a class="btn btn-outline-success" asp-page="/ChatRoom/Details" asp-route-id="@item.ChatRoomId">Show messages </a></p>
+        <a class="btn btn-outline-warning" asp-page="/ChatRoom/Edit" asp-route-id="@item.ChatRoomId">Edit room</a>
+        <small><a class="btn btn-outline-danger" asp-page="/ChatRoom/Delete" asp-route-id="@item.ChatRoomId"> Delete</a></small>
     }
 }

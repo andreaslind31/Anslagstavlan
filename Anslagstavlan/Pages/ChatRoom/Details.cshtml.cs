@@ -23,9 +23,6 @@ namespace Anslagstavlan.Pages.ChatRoom
 
         public List<ChatMessageModel> TempMessages { get; set; } = new List<ChatMessageModel>();
 
-        //TODO : test with viewModel - yet to implement! 
-        [BindProperty]
-        public Message Model { get; set; }
 
         [BindProperty]
         public ChatRoomModel ChatRoom { get; set; }
@@ -61,27 +58,34 @@ namespace Anslagstavlan.Pages.ChatRoom
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            // check modelState
             if (!ModelState.IsValid)
             {
                 return Page();
-                
+
             }
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            ChatRoom = _context.ChatRoomModels.FirstOrDefault(x => x.ChatRoomId == RoomId);
+            var chatUser = new ChatUserModel()
+            {
+                Email = user.Email,
+                UserName = user.Email,
+            };
 
-            ChatMessage.Date = DateTime.Now;
-            //ChatMessage.ChatUserId = user.Id; doesnt work with UserManager !!
-            ChatMessage.ChatRoomId = ChatRoom.ChatRoomId;
-            ChatMessage.ChatUser = (ChatUserModel)user;
+            ChatRoom = _context.ChatRoomModels.FirstOrDefault(x => x.ChatRoomId == RoomId); // <- doesnt work properly !
             ChatMessage.ChatRoom = ChatRoom;
-            ChatMessage.Message = Model.Text; //test with viewModel class Message
+            ChatMessage.ChatRoomId = ChatRoom.ChatRoomId;
+            ChatMessage.Date = DateTime.Now;
+            ChatMessage.ChatUser = chatUser;
+            ChatMessage.ChatUserId = chatUser.ChatUserId;
+            
 
             _context.Add(ChatMessage);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("/ChatRoom/Details", new { ChatRoom.ChatRoomId });
+            return RedirectToPage("/ChatRoom/Details", new
+            {
+                ChatRoom.ChatRoomId
+            });
         }
     }
 }

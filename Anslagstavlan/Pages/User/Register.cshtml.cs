@@ -39,7 +39,7 @@ namespace Anslagstavlan.Pages.User
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, false);
-                    return RedirectToPage("/Index");
+                    return RedirectToPage("/ChatRoom/Index");
                 }
                 foreach (var error in result.Errors)
                 {
