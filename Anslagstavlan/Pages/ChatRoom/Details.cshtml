@@ -6,6 +6,8 @@
 
 <h1>@Model.ChatRoom.ChatRoomName's chatroom</h1>
 
+<img class="img-thumbnail" style="width:200px;" src="~/img/@Model.ChatRoom.PhotoPath" asp-append-version="true" />
+
 @if (Model.ChatRoom.Messages != null)
 {
     @foreach (var message in Model.ChatRoom.Messages)

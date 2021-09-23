@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Anslagstavlan.Domain.Database;
 using Anslagstavlan.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Anslagstavlan.Pages.ChatRoom
 {
@@ -16,26 +19,31 @@ namespace Anslagstavlan.Pages.ChatRoom
     public class EditRoomModel : PageModel
     {
         private readonly AuthDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        private static int RoomId;
 
         [BindProperty]
-        public ChatRoomModel ChatRoomModel { get; set; }
+        public ChatRoomModel ChatRoom { get; set; }
 
-        public EditRoomModel(AuthDbContext context)
+        [BindProperty]
+        public IFormFile Photo { get; set; }
+
+        public EditRoomModel(AuthDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            
+            RoomId = id;
 
-            ChatRoomModel = await _context.ChatRoomModels.FirstOrDefaultAsync(m => m.ChatRoomId == id);
+            ChatRoom = await _context.ChatRoomModels.FirstOrDefaultAsync(m => m.ChatRoomId == id);
 
-            if (ChatRoomModel == null)
+            if (ChatRoom == null)
             {
                 return NotFound();
             }
@@ -51,7 +59,7 @@ namespace Anslagstavlan.Pages.ChatRoom
                 return Page();
             }
 
-            _context.Attach(ChatRoomModel).State = EntityState.Modified;
+            _context.Attach(ChatRoom).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +67,7 @@ namespace Anslagstavlan.Pages.ChatRoom
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ChatRoomModelExists(ChatRoomModel.ChatRoomId))
+                if (!ChatRoomModelExists(ChatRoom.ChatRoomId))
                 {
                     return NotFound();
                 }
@@ -69,6 +77,35 @@ namespace Anslagstavlan.Pages.ChatRoom
                 }
             }
 
+            if (Photo != null)
+            {
+                
+                string folder = Path.Combine(_webHostEnvironment.WebRootPath, "img");
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                string file = Path.Combine(folder, ChatRoom.PhotoPath);
+
+                if (System.IO.File.Exists(file))
+                {
+                    System.IO.File.Delete(file);
+                }
+
+                string uniqueFileName = String.Concat(Guid.NewGuid().ToString(), "-", ChatRoom.ChatRoomName.ToLower(), ".jpg");
+
+                string uploadsFolder = Path.Combine(folder, uniqueFileName);
+
+                using (var fileStream = new FileStream(uploadsFolder, FileMode.Create))
+                {
+                    Photo.CopyTo(fileStream);
+                }
+
+                _context.ChatRoomModels.Where(x => x.ChatRoomId == RoomId).FirstOrDefault().PhotoPath = uniqueFileName;
+
+            }
             return RedirectToPage("/ChatRoom/Index");
         }
 

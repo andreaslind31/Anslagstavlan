@@ -15,7 +15,8 @@
 
         <h3>@room.ChatRoomName</h3>
         <h4>created by: @room.ChatRoomOwner</h4>
-        
+        <img src="~/img/@room.PhotoPath" class="img-thumbnail" style="width:300px;" asp-append-version="true" />
+
         <p><a class="btn btn-outline-success" asp-page="/ChatRoom/Details" asp-route-id="@room.ChatRoomId">Show messages </a></p>
         <a class="btn btn-outline-warning" asp-page="/ChatRoom/Edit" asp-route-id="@room.ChatRoomId">Edit room</a>
         <small><a class="btn btn-outline-danger" asp-page="/ChatRoom/Delete" asp-route-id="@room.ChatRoomId"> Delete</a></small>

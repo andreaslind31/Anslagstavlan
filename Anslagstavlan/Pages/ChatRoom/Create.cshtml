@@ -7,16 +7,19 @@
 
 <h1>CreateRoom</h1>
 
-<h4>ChatRoomModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
+
             <div class="form-group">
-                <label asp-for="ChatRoomName" class="control-label">Chatroom: </label>
-                <input asp-for="ChatRoomName" class="form-control" />
+                <label asp-for="ChatRoom.ChatRoomName" class="control-label">Chatroom: </label>
+                <input asp-for="ChatRoom.ChatRoomName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="ChatRoom.PhotoPath" class="control-label">Choose a photo: </label>
+                <input type="file" asp-for="ChatRoom.PhotoPath" class="form-control-file" accept=".jpg, .jpeg" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -26,7 +29,7 @@
 </div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+    <p>Back to the list of all <a asp-page="/Index" class="btn btn-outline-success"> chat rooms</a></p>
 </div>
 
 @section Scripts {
