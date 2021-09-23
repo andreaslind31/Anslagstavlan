@@ -8,20 +8,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Anslagstavlan.Domain.Database;
 using Anslagstavlan.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Anslagstavlan.Pages.ChatRoom
 {
     [Authorize]
     public class CreateRoomModel : PageModel
     {
+        private readonly UserManager<ChatUserModel> _userManager;
         private readonly AuthDbContext _context;
 
         [BindProperty]
-        public ChatRoomModel ChatRoom { get; set; }
+        public string ChatRoomName { get; set; }
 
-        public CreateRoomModel(AuthDbContext context)
+        public CreateRoomModel(AuthDbContext context, UserManager<ChatUserModel> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public IActionResult OnGet()
@@ -36,11 +39,12 @@ namespace Anslagstavlan.Pages.ChatRoom
             {
                 return Page();
             }
-
-            _context.ChatRoomModels.Add(ChatRoom);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var chatRoom = new ChatRoomModel { ChatRoomOwner = user.ChatUserId, ChatRoomName = ChatRoomName };
+            _context.Add(chatRoom);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/ChatRoom/Index");
         }
     }
 }

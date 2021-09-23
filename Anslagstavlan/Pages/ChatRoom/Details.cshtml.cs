@@ -8,53 +8,41 @@ using Microsoft.EntityFrameworkCore;
 using Anslagstavlan.Domain.Database;
 using Anslagstavlan.Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Anslagstavlan.ViewModels;
 
 namespace Anslagstavlan.Pages.ChatRoom
 {
     public class DetailsModel : PageModel
     {
-        private int RoomId { get; set; }
+        private static int RoomId { get; set; }
 
         private readonly AuthDbContext _context;
 
-        // not working with UserManager !!
-        private readonly UserManager<IdentityUser> _userManager;
+        public UserManager<ChatUserModel> UserManager { get; }
 
         public List<ChatMessageModel> TempMessages { get; set; } = new List<ChatMessageModel>();
 
-
-        [BindProperty]
         public ChatRoomModel ChatRoom { get; set; }
 
         [BindProperty]
         public ChatMessageModel ChatMessage { get; set; }
 
-        public DetailsModel(AuthDbContext context, UserManager<IdentityUser> userManager)
+        public DetailsModel(AuthDbContext context, UserManager<ChatUserModel> userManager)
         {
             _context = context;
-            _userManager = userManager;
+            UserManager = userManager;
         }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task OnGet(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            RoomId = (int)id;
+            RoomId = id;
 
-            ChatRoom = await _context.ChatRoomModels.FirstOrDefaultAsync(m => m.ChatRoomId == id);
+            var user = await UserManager.GetUserAsync(HttpContext.User);
 
-            if (ChatRoom == null)
-            {
-                return NotFound();
-            }
+            ChatRoom = _context.ChatRoomModels.FirstOrDefault(m => m.ChatRoomId == id);
 
-            TempMessages = _context.ChatMessageModels.Include(x => x.ChatUser).Where(x => x.ChatRoomId == RoomId).ToList();
+            TempMessages = _context.ChatMessageModels.Include(x => x.ChatUser).Where(x => x.ChatRoomId == id).ToList();
 
-            return Page();
         }
         public async Task<IActionResult> OnPostAsync()
         {
@@ -64,27 +52,31 @@ namespace Anslagstavlan.Pages.ChatRoom
 
             }
 
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var chatUser = new ChatUserModel()
+            var user = await UserManager.GetUserAsync(HttpContext.User);
+            if (user == null)
             {
-                Email = user.Email,
-                UserName = user.Email,
-            };
-
-            ChatRoom = _context.ChatRoomModels.FirstOrDefault(x => x.ChatRoomId == RoomId); // <- doesnt work properly !
+                return RedirectToPage("/User/Login");
+            }
+            ChatMessage.ChatUser = user;
+            ChatMessage.ChatUserId = user.ChatUserId;
+            
+            ChatRoom = _context.ChatRoomModels.FirstOrDefault(x => x.ChatRoomId == RoomId);
             ChatMessage.ChatRoom = ChatRoom;
             ChatMessage.ChatRoomId = ChatRoom.ChatRoomId;
             ChatMessage.Date = DateTime.Now;
-            ChatMessage.ChatUser = chatUser;
-            ChatMessage.ChatUserId = chatUser.ChatUserId;
+           
             
+            var result = _context.Add(ChatMessage);
+            // result = "lots of data"
+           
+            var state = result.State;
+            // state = added
 
-            _context.Add(ChatMessage);
             await _context.SaveChangesAsync();
-
+            
             return RedirectToPage("/ChatRoom/Details", new
             {
-                ChatRoom.ChatRoomId
+                Id = RoomId
             });
         }
     }

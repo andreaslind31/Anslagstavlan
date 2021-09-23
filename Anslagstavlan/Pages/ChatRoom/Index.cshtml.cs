@@ -10,20 +10,20 @@ using Anslagstavlan.Domain.Models;
 
 namespace Anslagstavlan.Pages.ChatRoom
 {
-    public class ListRoomModel : PageModel
+    public class IndexModel : PageModel
     {
         private readonly AuthDbContext _context;
 
-        public IList<ChatRoomModel> ChatRoomModel { get; set; } 
+        public IList<ChatRoomModel> ListRoomModel { get; set; } 
 
-        public ListRoomModel(AuthDbContext context)
+        public IndexModel(AuthDbContext context)
         {
             _context = context;
         }
 
         public async Task OnGetAsync()
         {
-            ChatRoomModel = await _context.ChatRoomModels.ToListAsync();
+            ListRoomModel = await _context.ChatRoomModels.ToListAsync();
         }
     }
 }

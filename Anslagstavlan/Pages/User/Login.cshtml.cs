@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Anslagstavlan.Domain.Models;
 using Anslagstavlan.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,15 +10,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Anslagstavlan.Pages.User
 {
+    [BindProperties]
     public class LoginModel : PageModel
     {
-        public readonly SignInManager<IdentityUser> signInManager;
+        public readonly SignInManager<ChatUserModel> signInManager;
 
-        [BindProperty]
-        public Login Model { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public bool RememberMe { get; set; }
 
-
-        public LoginModel(SignInManager<IdentityUser> signInManager)
+        public LoginModel(SignInManager<ChatUserModel> signInManager)
         {
             this.signInManager = signInManager;
         }
@@ -28,7 +30,7 @@ namespace Anslagstavlan.Pages.User
         {
             if (ModelState.IsValid)
             {
-                var identityResult = await signInManager.PasswordSignInAsync(Model.Email, Model.Password, Model.RememberMe, false);
+                var identityResult = await signInManager.PasswordSignInAsync(Username, Password, RememberMe, false);
                 if (identityResult.Succeeded)
                 {
                     if (returnUrl == null || returnUrl == "/")

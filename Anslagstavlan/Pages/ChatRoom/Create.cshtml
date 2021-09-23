@@ -13,15 +13,10 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
             <div class="form-group">
-                <label asp-for="ChatRoom.ChatRoomOwner" class="control-label"></label>
-                <input asp-for="ChatRoom.ChatRoomOwner" class="form-control" />
-                <span asp-validation-for="ChatRoom.ChatRoomOwner" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChatRoom.ChatRoomName" class="control-label"></label>
-                <input asp-for="ChatRoom.ChatRoomName" class="form-control" />
-                <span asp-validation-for="ChatRoom.ChatRoomName" class="text-danger"></span>
+                <label asp-for="ChatRoomName" class="control-label">Chatroom: </label>
+                <input asp-for="ChatRoomName" class="form-control" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -1,5 +1,5 @@
 ﻿@page
-@model Anslagstavlan.Pages.ChatRoom.ListRoomModel
+@model Anslagstavlan.Pages.ChatRoom.IndexModel
 
 
 <h1>List of chat rooms!</h1>
@@ -8,15 +8,16 @@
     <a class="btn btn-primary" asp-page="/ChatRoom/Create">Create new chat room</a>
 </p>
 
-@if (Model.ChatRoomModel.Any())
+@if (Model.ListRoomModel.Any())
 {
-    @foreach (var item in Model.ChatRoomModel)
+    @foreach (var room in Model.ListRoomModel)
     {
 
-        <h3>@item.ChatRoomName</h3>
-        <h4>@item.ChatRoomOwner</h4>
-        <p><a class="btn btn-outline-success" asp-page="/ChatRoom/Details" asp-route-id="@item.ChatRoomId">Show messages </a></p>
-        <a class="btn btn-outline-warning" asp-page="/ChatRoom/Edit" asp-route-id="@item.ChatRoomId">Edit room</a>
-        <small><a class="btn btn-outline-danger" asp-page="/ChatRoom/Delete" asp-route-id="@item.ChatRoomId"> Delete</a></small>
+        <h3>@room.ChatRoomName</h3>
+        <h4>created by: @room.ChatRoomOwner</h4>
+        
+        <p><a class="btn btn-outline-success" asp-page="/ChatRoom/Details" asp-route-id="@room.ChatRoomId">Show messages </a></p>
+        <a class="btn btn-outline-warning" asp-page="/ChatRoom/Edit" asp-route-id="@room.ChatRoomId">Edit room</a>
+        <small><a class="btn btn-outline-danger" asp-page="/ChatRoom/Delete" asp-route-id="@room.ChatRoomId"> Delete</a></small>
     }
 }

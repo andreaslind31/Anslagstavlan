@@ -19,7 +19,6 @@ namespace Anslagstavlan.Pages.ChatRoom
         [BindProperty]
         public ChatRoomModel ChatRoom { get; set; }
 
-
         public DeleteRoomModel(AuthDbContext context)
         {
             _context = context;
@@ -56,7 +55,7 @@ namespace Anslagstavlan.Pages.ChatRoom
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/ChatRoom/Index");
         }
     }
 }

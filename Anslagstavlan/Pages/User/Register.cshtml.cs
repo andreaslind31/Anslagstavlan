@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Anslagstavlan.Domain.Models;
 using Anslagstavlan.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,14 +10,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Anslagstavlan.Pages.User
 {
+    [BindProperties]
     public class RegisterModel : PageModel
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<ChatUserModel> userManager;
+        private readonly SignInManager<ChatUserModel> signInManager;
 
-        [BindProperty]
-        public Register Model { get; set; }
-        public RegisterModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public string Username { get; set; }
+        public string Password { get; set; }
+
+        public RegisterModel(UserManager<ChatUserModel> userManager, SignInManager<ChatUserModel> signInManager)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -28,17 +31,16 @@ namespace Anslagstavlan.Pages.User
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser()
+                var user = new ChatUserModel()
                 {
-                    UserName = Model.Email,
-                    Email = Model.Email
+                    UserName = Username,
                 };
 
-                var result = await userManager.CreateAsync(user, Model.Password);
+                var result = await userManager.CreateAsync(user, Password);
 
                 if (result.Succeeded)
                 {
-                    await signInManager.SignInAsync(user, false);
+                    await signInManager.SignInAsync(user, isPersistent: true);
                     return RedirectToPage("/ChatRoom/Index");
                 }
                 foreach (var error in result.Errors)

@@ -11,20 +11,16 @@
             <form method="post">
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="mb-3">
-                    <label asp-for="Model.Email" class="form-label">Email address</label>
-                    <input type="text" asp-for="Model.Email" class="form-control" />
-                    <span asp-validation-for="Model.Email" class="text-danger"></span>
+                    <label asp-for="Username" class="form-label">Email address</label>
+                    <input type="text" asp-for="Username" class="form-control" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
-                    <label asp-for="Model.Password" class="form-label">Password</label>
-                    <input type="password" asp-for="Model.Password" class="form-control" />
-                    <span asp-validation-for="Model.Password" class="text-danger"></span>
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input type="password" asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-                <div class="mb-3">
-                    <label asp-for="Model.ConfirmPassword" class="form-label">Confirm Password</label>
-                    <input type="password" asp-for="Model.ConfirmPassword" class="form-control" />
-                    <span asp-validation-for="Model.ConfirmPassword" class="text-danger"></span>
-                </div>
+                
                 <div class="mb-3">
                     <button type="submit" class="btn btn-primary">Register</button>
                 </div>

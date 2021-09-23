@@ -17,14 +17,15 @@ namespace Anslagstavlan.Pages.ChatRoom
     {
         private readonly AuthDbContext _context;
 
+        [BindProperty]
+        public ChatRoomModel ChatRoomModel { get; set; }
+
         public EditRoomModel(AuthDbContext context)
         {
             _context = context;
         }
 
-        [BindProperty]
-        public ChatRoomModel ChatRoomModel { get; set; }
-
+        
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
