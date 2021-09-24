@@ -7,5 +7,6 @@ namespace Anslagstavlan.Domain.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ChatUserId { get; set; }
+        public string PhotoPath { get; set; }
     }
 }

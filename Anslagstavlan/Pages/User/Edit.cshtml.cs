@@ -1,57 +1,50 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Anslagstavlan.Domain.Database;
 using Anslagstavlan.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
-namespace Anslagstavlan.Pages.ChatRoom
+namespace Anslagstavlan.Pages.User
 {
     [Authorize]
-    public class EditRoomModel : PageModel
+    public class EditModel : PageModel
     {
-        private readonly AuthDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly AuthDbContext _context;
 
-        private static int RoomId;
+        private static string UserName;
 
         [BindProperty]
-        public ChatRoomModel ChatRoom { get; set; }
+        public ChatUserModel ChatUser { get; set; }
 
         [BindProperty]
         public IFormFile Photo { get; set; }
 
-        public EditRoomModel(AuthDbContext context, IWebHostEnvironment webHostEnvironment)
+        public EditModel(AuthDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
-
-        
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync(string name)
         {
-            
-            RoomId = id;
+            UserName = name;
 
-            ChatRoom = await _context.ChatRoomModels.FirstOrDefaultAsync(m => m.ChatRoomId == id);
+            ChatUser = await _context.ChatUserModels.FirstOrDefaultAsync(m => m.UserName == name);
 
-            if (ChatRoom == null)
+            if (ChatUser == null)
             {
                 return NotFound();
             }
             return Page();
         }
-
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -59,7 +52,7 @@ namespace Anslagstavlan.Pages.ChatRoom
                 return Page();
             }
 
-            _context.Attach(ChatRoom).State = EntityState.Modified;
+            _context.Attach(ChatUser).State = EntityState.Modified;
 
             try
             {
@@ -67,7 +60,7 @@ namespace Anslagstavlan.Pages.ChatRoom
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ChatRoomModelExists(ChatRoom.ChatRoomId))
+                if (!ChatUserModelExists(ChatUser.ChatUserId))
                 {
                     return NotFound();
                 }
@@ -79,7 +72,7 @@ namespace Anslagstavlan.Pages.ChatRoom
 
             if (Photo != null)
             {
-                
+
                 string folder = Path.Combine(_webHostEnvironment.WebRootPath, "img");
 
                 if (!Directory.Exists(folder))
@@ -87,14 +80,14 @@ namespace Anslagstavlan.Pages.ChatRoom
                     Directory.CreateDirectory(folder);
                 }
 
-                string file = Path.Combine(folder, ChatRoom.PhotoPath);
+                string file = Path.Combine(folder, ChatUser.PhotoPath);
 
                 if (System.IO.File.Exists(file))
                 {
                     System.IO.File.Delete(file);
                 }
 
-                string uniqueFileName = String.Concat(Guid.NewGuid().ToString(), "-", ChatRoom.ChatRoomName.ToLower(), ".jpg");
+                string uniqueFileName = String.Concat(Guid.NewGuid().ToString(), "-", ChatUser.UserName.ToLower(), ".jpg");
 
                 string uploadsFolder = Path.Combine(folder, uniqueFileName);
 
@@ -103,16 +96,18 @@ namespace Anslagstavlan.Pages.ChatRoom
                     Photo.CopyTo(fileStream);
                 }
 
-                _context.ChatRoomModels.Where(x => x.ChatRoomId == RoomId).FirstOrDefault().PhotoPath = uniqueFileName;
+                _context.ChatUserModels.Where(x => x.UserName == UserName).FirstOrDefault().PhotoPath = uniqueFileName;
 
+                int chatUserId = _context.ChatUserModels.Where(x => x.UserName == UserName).FirstOrDefault().ChatUserId;
 
+                return RedirectToPage("/User/Edit", chatUserId );
             }
-            return RedirectToPage("/ChatRoom/Index");
+            return RedirectToPage("/User/Index");
         }
 
-        private bool ChatRoomModelExists(int id)
+        private bool ChatUserModelExists(int chatUserId)
         {
-            return _context.ChatRoomModels.Any(e => e.ChatRoomId == id);
+            return _context.ChatUserModels.Any(e => e.ChatUserId == chatUserId);
         }
     }
 }

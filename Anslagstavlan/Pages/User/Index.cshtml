@@ -1,0 +1,10 @@
+﻿@page
+@model Anslagstavlan.Pages.User.IndexModel
+@{
+}
+
+<h1>Hi @Model.ChatUser.UserName</h1>
+
+<p><a class="btn btn-outline-success" asp-page="/ChatRoom/Index">Back to chat rooms </a></p>
+<a class="btn btn-outline-warning" asp-page="/User/Edit" asp-route-id="@Model.ChatUser.ChatUserId">Edit user</a>
+@*<small><a class="btn btn-outline-danger" asp-page="/User/Delete" asp-route-id="@Model.ChatUser.ChatUserId"> Delete user</a></small>*@
