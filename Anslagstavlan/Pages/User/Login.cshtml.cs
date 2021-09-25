@@ -10,15 +10,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Anslagstavlan.Pages.User
 {
-    [BindProperties]
     public class LoginModel : PageModel
     {
         public readonly SignInManager<ChatUserModel> signInManager;
 
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool RememberMe { get; set; }
-
+        [BindProperty]
+        public Login Model { get; set; } //viewModel
+        
         public LoginModel(SignInManager<ChatUserModel> signInManager)
         {
             this.signInManager = signInManager;
@@ -28,9 +26,11 @@ namespace Anslagstavlan.Pages.User
         }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            
             if (ModelState.IsValid)
             {
-                var identityResult = await signInManager.PasswordSignInAsync(Username, Password, RememberMe, false);
+                
+                var identityResult = await signInManager.PasswordSignInAsync(Model.Username, Model.Password, isPersistent: Model.RememberMe, false);
                 if (identityResult.Succeeded)
                 {
                     if (returnUrl == null || returnUrl == "/")

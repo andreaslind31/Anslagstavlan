@@ -10,18 +10,18 @@
 
             <form method="post">
                 <div class="mb-3">
-                    <label asp-for="Username" class="form-label">Email address</label>
-                    <input type="text" asp-for="Username" class="form-control" />
-                    <span asp-validation-for="Username" class="text-danger"></span>
+                    <label asp-for="Model.Username" class="form-label">Email address</label>
+                    <input type="text" asp-for="Model.Username" class="form-control" />
+                    <span asp-validation-for="Model.Username" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
-                    <label asp-for="Password" class="form-label">Password</label>
-                    <input type="password" asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <label asp-for="Model.Password" class="form-label">Password</label>
+                    <input type="password" asp-for="Model.Password" class="form-control" />
+                    <span asp-validation-for="Model.Password" class="text-danger"></span>
                 </div>
                 <div class="mb-3 form-check">
-                    <label asp-for="RememberMe" class="form-check-label">Remember me?</label>
-                    <input type="checkbox" asp-for="RememberMe" class="form-check-input" />
+                    <label asp-for="Model.RememberMe" class="form-check-label">Remember me?</label>
+                    <input type="checkbox" asp-for="Model.RememberMe" class="form-check-input" />
                 </div>
                 <div class="mb-3">
                     <button type="submit" class="btn btn-primary">Login</button>

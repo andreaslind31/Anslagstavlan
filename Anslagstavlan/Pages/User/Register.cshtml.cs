@@ -17,16 +17,9 @@ namespace Anslagstavlan.Pages.User
         private readonly UserManager<ChatUserModel> userManager;
         private readonly SignInManager<ChatUserModel> signInManager;
 
-        public string Username { get; set; }
+        [BindProperty]
+        public Register Model { get; set; } //viewModel
 
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        [Compare(nameof(Password), ErrorMessage = "Passwords dont match!")]
-        public string ConfirmPassword { get; set; }
 
         public RegisterModel(UserManager<ChatUserModel> userManager, SignInManager<ChatUserModel> signInManager)
         {
@@ -42,10 +35,10 @@ namespace Anslagstavlan.Pages.User
             {
                 var user = new ChatUserModel()
                 {
-                    UserName = Username,
+                    UserName = Model.Username,
                 };
 
-                var result = await userManager.CreateAsync(user, Password);
+                var result = await userManager.CreateAsync(user, Model.Password);
 
                 if (result.Succeeded)
                 {
